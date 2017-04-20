@@ -165,8 +165,12 @@ public class TestGetDecode {
     }
 
     public static void stringToBase64(String s) throws Exception {
-        byte[] result = Base64.encodeBase64(s.getBytes());
-        outBytes(result);
+//        byte[] result = Base64.encodeBase64(s.getBytes());
+//        outBytes(result);
+        
+        
+        String base64 = Base64.encodeBase64URLSafeString(s.getBytes());
+        System.out.println(base64);
     }
 
     public static void outBytes(byte[] bytes) throws Exception {
@@ -233,7 +237,7 @@ public class TestGetDecode {
     
     
     public static void main(String[] args)  throws Exception{
-        String s = "s13";
+        String s = "s13中国";
         System.out.println("原始字符串：" + s);
         System.out.println("ascii编码：");
         int[] asc2 = getStringAscii(s);
@@ -241,7 +245,8 @@ public class TestGetDecode {
         System.out.println("ascii码 转为二进制数据");
         
         String[] asciiToBinary = asciiToBinary(asc2);
-        
+        System.setProperty("sun.jnu.encoding", "gb2312");
+        System.out.println(System.getProperty("sun.jnu.encoding"));
         
         System.out.println("base64编码：");
         stringToBase64(s);
