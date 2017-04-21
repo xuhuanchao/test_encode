@@ -7,6 +7,8 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.charset.Charset;
 
+import javax.mail.internet.MimeUtility;
+
 import org.apache.commons.codec.binary.Base64;
 
 public class TestGetDecode {
@@ -164,13 +166,16 @@ public class TestGetDecode {
         
     }
 
-    public static void stringToBase64(String s) throws Exception {
+    public static String stringToBase64(String s) throws Exception {
 //        byte[] result = Base64.encodeBase64(s.getBytes());
 //        outBytes(result);
         
+        byte[] encodeBase64 = Base64.encodeBase64(s.getBytes(), false, true);
+        outBytes(encodeBase64);
         
         String base64 = Base64.encodeBase64URLSafeString(s.getBytes());
         System.out.println(base64);
+        return base64;
     }
 
     public static void outBytes(byte[] bytes) throws Exception {
@@ -235,9 +240,16 @@ public class TestGetDecode {
         return asc2;
     }
     
+    public static String decodeStr(String encodeStr , String charset) throws Exception{  
+        byte[] b=encodeStr.getBytes();  
+        Base64 base64=new Base64();  
+        b=base64.decode(b);  
+        String s=new String(b , charset);  
+        return s;  
+    }  
     
     public static void main(String[] args)  throws Exception{
-        String s = "s13中国";
+        String s = "天马多空策略20170105对账数据";
         System.out.println("原始字符串：" + s);
         System.out.println("ascii编码：");
         int[] asc2 = getStringAscii(s);
@@ -245,14 +257,27 @@ public class TestGetDecode {
         System.out.println("ascii码 转为二进制数据");
         
         String[] asciiToBinary = asciiToBinary(asc2);
-        System.setProperty("sun.jnu.encoding", "gb2312");
-        System.out.println(System.getProperty("sun.jnu.encoding"));
+
         
         System.out.println("base64编码：");
-        stringToBase64(s);
+        String base64 =  stringToBase64(s);
         
-//        outBytes(s.getBytes());
-//        
-//        
+        //
+        base64= "5aSp6ams5aSa56m6562W55WlMjAxNzAxMTLlr7notKbmlbDmja4";
+        String s0 = decodeStr(base64, "utf-8");
+        System.out.println("s0 =" +s0 );
+        
+        String s1 = decodeStr("zuW/876t0tesQsWjwb/X0zE0usXDv8jVttTVy7WlMjAxNzAzMjI=?=", "gb18030");
+        System.out.println("s1 =" + s1);
+        
+        System.out.println(MimeUtility.encodeText("天马多空策略20170105对账数据"));
+        String ss = MimeUtility.decodeText("=?utf-8?B?5aSp6ams5aSa56m6562W55WlMjAxNzAxMDXlr7notKbmlbDm?= =?utf-8?B?ja4=?=");
+        
+        System.out.println(ss);
+        
+        
+        String s2= "=?utf-8?B?5aSp6ams5aSa56m6562W55WlMjAxNzAxMTLlr7notKbmlbDm?= =?utf-8?B?ja4=?=";
+        System.out.println(MimeUtility.decodeText(s2));
+        
     }
 }
