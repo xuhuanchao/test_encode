@@ -129,17 +129,21 @@ public class CodeUtil {
      * @return
      * @throws Exception
      */
-    public static Character[] encodeStrToBase64 (String str , String charset) throws Exception{
+    public static String encodeStrToBase64 (String str , String charset) throws Exception{
+        StringBuffer sb = new StringBuffer();
         int[] asciis = getStringAscii(str, charset);
         String[] binarys = asciiToBinary(asciis);
         String[] base64Binary = getBase64Binary(binarys);
         String formateBase64Binary = FormatUtil.formateStringArray(base64Binary);
         System.out.println(formateBase64Binary);
-        Character[] base64code = new Character[base64Binary.length]; 
         for(int i=0; i<base64Binary.length ; i++){
-            base64code[i] = base64Map.get(Integer.parseInt(base64Binary[i],2));
+            sb.append(base64Map.get(Integer.parseInt(base64Binary[i],2)));
         }
-        return base64code;
+        int n = base64Binary.length % 4;
+        for(int i=0; i<n; i++){
+            sb.append("=");
+        }        
+        return sb.toString();
     }
     
     
@@ -168,15 +172,7 @@ public class CodeUtil {
     public static void main(String[] args)  throws Exception{
         String str = "张三";
         String charset = "gbk";
-        Character[] base64Char = encodeStrToBase64(str, charset);
-        for(Character c : base64Char){
-            System.out.print(c);
-        }
-        int n = base64Char.length % 4;
-        for(int i=0; i<n; i++){
-            System.out.print("=");
-        }
-        
+        System.out.println(encodeStrToBase64(str, charset));
         commonsCodec(str, charset);
         javamail(str, charset);
     }
