@@ -33,6 +33,7 @@ public class CodeUtil {
         base64Map.put(63, '/');
     }
     
+    public static boolean selfToolOperateLog = false;
     
     /**
      * 获取字符串对应的ascii码数组
@@ -40,15 +41,17 @@ public class CodeUtil {
      * @return int[]
      * @throws Exception
      */
-    public static int[] getStringAscii(String s , String code) throws Exception{
+    public static int[] getStringAscii(String s , String charset) throws Exception{
         StringBuilder sb = new StringBuilder();
-        byte[] bytes = s.getBytes(code);
+        byte[] bytes = s.getBytes(charset);
         int[] asc2 = new int[bytes.length];
         for (int i = 0; i < bytes.length; i++) {
             sb.append(bytes[i] + " ");
             asc2[i] = bytes[i];
         }
-        System.out.println(sb.toString());
+        if(selfToolOperateLog){
+            System.out.println("字符串转byte数组后对应的ascii码： " + sb.toString());    
+        }
         return asc2;
     }
     
@@ -61,6 +64,7 @@ public class CodeUtil {
      */
     public static String[] asciiToBinary(int[] asc2) throws Exception{
         String[] binary = new String[asc2.length];
+        StringBuffer sb = new StringBuffer();
         for(int i=0; i<asc2.length; i++){
             String b = Integer.toBinaryString(asc2[i] & 0xff);
             if(b.length() < 8){
@@ -70,16 +74,20 @@ public class CodeUtil {
                 
             }
             binary[i] = b;
-            System.out.print(b + " ");
+            if(selfToolOperateLog){
+                sb.append(b + " ");
+            }
         }
-        System.out.println();
+        if(selfToolOperateLog){
+            System.out.println("ascii码数组对应的二进制数字为：" + sb.toString());
+        }
         return binary;
     }
     
     
     /**
      * 将二进制编码转为base64的格式
-     * 6位一组
+     * 将原始二进制 6位一组，组合
      * @param oriBinary
      * @return
      * @throws Exception
@@ -135,7 +143,10 @@ public class CodeUtil {
         String[] binarys = asciiToBinary(asciis);
         String[] base64Binary = getBase64Binary(binarys);
         String formateBase64Binary = FormatUtil.formateStringArray(base64Binary);
-        System.out.println(formateBase64Binary);
+        if(selfToolOperateLog){
+            System.out.println("将二进制数字格式化为base64处理时的格式：" + formateBase64Binary);    
+        }
+        
         for(int i=0; i<base64Binary.length ; i++){
             sb.append(base64Map.get(Integer.parseInt(base64Binary[i],2)));
         }
@@ -160,12 +171,60 @@ public class CodeUtil {
     
     public static void javamail(String str, String charset) throws Exception{
         System.out.println("\n\n ********** 使用 javax.mail.internet.MimeUtility 工具 进行base64编码...");
-        String mimeBase64 = MimeUtility.encodeText(str ,charset , "B");
+        String mimeBase64 = javamailEncode(str, charset);
         System.out.println("原始字符串:" + str + " \n编码后:" + mimeBase64);
         
-        System.out.println("\n\n ***************  使用javamail 的 javax.mail.internet.MimeUtility 工具 进行base64解码...");
-        System.out.println("原始base64编码：" + mimeBase64 + "\n解码后：" + MimeUtility.decodeText(mimeBase64));
-
+        System.out.println("\n\n ********** 使用 javax.mail.internet.MimeUtility 工具 进行base64解码...");
+        String decodeText = javamailDecode(mimeBase64);
+        System.out.println("原始base64编码：" + mimeBase64 + "\n解码后：" + decodeText);
+    }
+    
+    /**
+     * 使用commons-codec 进行base64编码
+     * @param str
+     * @param charset
+     * @return
+     * @throws Exception
+     */
+    public static String commonscodecEncode (String str, String charset) throws Exception {
+        String base64 =  Base64.encodeBase64String(str.getBytes(charset));
+        return base64;
+    }
+    
+    /**
+     * 使用commons-codec 进行base64解码
+     * @param base64
+     * @param charset
+     * @return
+     * @throws Exception
+     */
+    public static String commonscodecDecode (String base64  , String charset) throws Exception{
+        byte[] bytes = Base64.decodeBase64(base64);
+        String newStr = new String(bytes, charset);
+        return newStr;
+    }
+    
+    /**
+     * 使用javax.mail 进行mime base64 编码
+     * @param str
+     * @param charset
+     * @return
+     * @throws Exception
+     */
+    public static String javamailEncode(String str, String charset) throws Exception{
+        String mimeBase64 = MimeUtility.encodeText(str ,charset , "B");
+        return mimeBase64;
+    }
+    
+    /**
+     * 使用javax.mail 进行mime base64解码
+     * @param mimeBase64
+     * @return
+     * @throws Exception
+     */
+    public static String javamailDecode(String mimeBase64) throws Exception {
+        String decodeText = MimeUtility.decodeText(mimeBase64);
+        return decodeText;
     }
     
     

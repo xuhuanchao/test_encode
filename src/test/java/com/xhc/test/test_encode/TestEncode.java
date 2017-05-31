@@ -8,12 +8,16 @@ import org.junit.*;
 public class TestEncode {
 
     public static void main(String[] args) throws Exception {
-        String s = "體";
-        byte[] bytes = s.getBytes("gb2312");
-        for(int i=0; i<bytes.length ; i++){
-            System.out.println(Integer.toBinaryString(bytes[i] & 0xff) );
-        }
-        
+        int a = 13;
+        byte[] bytes = (a + "").getBytes();
+        System.out.println(FormatUtil.toBinary(a+ "", 10));
+        a = a >> 1;
+        System.out.println(FormatUtil.toBinary(a+ "", 10));
+        System.out.println(a);
+        a = 13;
+        a = a << 1;
+        System.out.println(FormatUtil.toBinary(a+ "", 10));
+        System.out.println(a);
     }
     
     @Test
