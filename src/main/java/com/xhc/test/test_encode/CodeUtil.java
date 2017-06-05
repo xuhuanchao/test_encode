@@ -229,10 +229,12 @@ public class CodeUtil {
     
     
     public static void main(String[] args)  throws Exception{
-        String str = "张三";
-        String charset = "gbk";
-        System.out.println(encodeStrToBase64(str, charset));
-        commonsCodec(str, charset);
-        javamail(str, charset);
+//        String str = "asd1s张";
+//        String charset = "gbk";
+//        System.out.println(encodeStrToBase64(str, charset));
+//        commonsCodec(str, charset);
+//        javamail(str, charset);
+        String a = javamailDecode("=C8=E7=B9=FB=C4=FA==B4=ED=CE=F3=B5=D8=BD=D3=CA=D5=C1=CB=B1=BE=B5=E7=D7=D3=D3=CA=BC=FE=A3=AC==C7=EB=C1=A2=BC=B4=BB=D8=B8=B4=B2=A2=CD=A8=D6=AA=B7=A2=BC=FE=C8=CB=A3=AC==B2=A2=D3=C0=BE=C3=C9=BE=B3=FD=B8=C3=B5=E7=D7=D3=D3=CA=BC=FE=BC=B0=C6=E4==CB=F9=D3=D0=B8=BD=BC=FE=BA=CD=CF=FA=BB=D9=CB=F9=D3=D0=B8=B4=D3=A1=BC=FE==A1=A3=D0=BB=D0=BB=A3=A1");
+        System.out.println(a);
     }
 }
